@@ -37,16 +37,18 @@ const (
 
 type TopicID string
 
-var topicRegex = regexp.MustCompile("[a-z0-9][a-z0-9\\-]+[a-z0-9]")
+var topicRegex = regexp.MustCompile("^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$")
 
-func CheckTopicID(topic string) error {
+func NewTopicID(topic string) (*TopicID, error) {
+
 	if topicRegex.MatchString(topic) {
-		return nil
+		t := TopicID(topic)
+		return &t, nil
 	}
-	return &TopicIDFormatError{topicID: topic}
+	return nil, &TopicIDFormatError{topicID: topic}
 }
 
-type AttributeName string
+type AttributeName TopicID
 
 func (a AttributeName) String() string {
 	return "$" + string(a)
